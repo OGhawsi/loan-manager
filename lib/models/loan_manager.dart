@@ -2,16 +2,16 @@ class Loan {
   String name;
   double amount;
   DateTime date;
-  List<Payment> payments;
+  List<Payment>? payments;
 
   Loan({
     required this.name,
     required this.amount,
     required this.date,
-    required this.payments,
+    this.payments,
   });
 
-  
+  get allPayments => payments;
 }
 
 class Payment {

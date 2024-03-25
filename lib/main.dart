@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:loan_manager/models/loan_model.dart';
 import 'package:loan_manager/pages/home_page.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  
+  runApp(
+    ChangeNotifierProvider(
+      create:(context) => LoanModel(),
+      child: const MyApp(),
+      ));
 }
 
 class MyApp extends StatelessWidget {
