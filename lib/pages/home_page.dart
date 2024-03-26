@@ -174,9 +174,21 @@ class _MyHomePageState extends State<MyHomePage> {
                       leading: const CircleAvatar(child: Icon(Icons.person)),
                       title: Text(model.allLoans[index].name),
                       // helper function to change date to human readable form
-                      subtitle: Text(
-                        model.getTimeAgo(model.allLoans[index].date),
+                      // make the timeAgo function to update itself overtime like ever minute
+                      subtitle: StreamBuilder<DateTime>(
+                        stream: model.timeStream(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            final currentTime = snapshot.data!;
+                            final timeAgo = model
+                                .getTimeAgo(currentTime); // Your time ago logic
+                            return Text(timeAgo);
+                          } else {
+                            return const Text("loading...");
+                          }
+                        },
                       ),
+
                       trailing: Text(
                         "\$${model.calculateRemainingLoanAmount(model.allLoans[index])}",
                         style: const TextStyle(

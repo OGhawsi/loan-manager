@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:loan_manager/models/loan_manager.dart';
+import 'dart:async';
 
 class LoanModel extends ChangeNotifier {
   final List<Loan> _loans = [
@@ -83,6 +84,10 @@ class LoanModel extends ChangeNotifier {
 
   double getInitialAmount(Loan loan) {
     return loan.amount;
+  }
+
+  Stream<DateTime> timeStream() {
+    return Stream.periodic(const Duration(minutes: 1), (_) => DateTime.now());
   }
 
   // human readable date
