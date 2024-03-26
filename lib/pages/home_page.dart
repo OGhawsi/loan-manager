@@ -179,12 +179,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         stream: model.timeStream(),
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
-                            final currentTime = snapshot.data!;
-                            final timeAgo = model
-                                .getTimeAgo(currentTime); // Your time ago logic
+                            // final currentTime = snapshot.data!;
+                            final timeAgo = model.getTimeAgo(model
+                                .allLoans[index].date); // Your time ago logic
                             return Text(timeAgo);
                           } else {
-                            return const Text("loading...");
+                            return const Text("Just now");
                           }
                         },
                       ),
