@@ -22,21 +22,6 @@ class _SingleLoanState extends State<SingleLoan> {
 
   var loanModel = LoanModel();
 
-  void addPayment() {
-    if (_paymentController.text == '') {
-      return;
-    }
-    loanModel.addPayment(
-      widget.borrower,
-      Payment(
-        5,
-        double.parse(_paymentController.text),
-        DateTime.now(),
-      ),
-    );
-    _paymentController.clear();
-  }
-
   // String get borrowe => borrower.borrower;
   @override
   Widget build(BuildContext context) {
@@ -63,8 +48,20 @@ class _SingleLoanState extends State<SingleLoan> {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context, 'Add');
-                  addPayment();
+                  Navigator.pop(context);
+                  // call LoanModel frm here
+                  if (_paymentController.text == '') {
+                    return;
+                  }
+                  Provider.of<LoanModel>(context, listen: false).addPayment(
+                    widget.borrower,
+                    Payment(
+                      5,
+                      double.parse(_paymentController.text),
+                      DateTime.now(),
+                    ),
+                  );
+                  _paymentController.clear();
                 },
                 child: const Text('Add'),
               ),
@@ -73,103 +70,103 @@ class _SingleLoanState extends State<SingleLoan> {
         ),
         child: const Icon(Icons.add),
       ),
-      body: Consumer<LoanModel>(
-        builder: (context, value, child) => Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Column(
-              children: [
-                // money card total loan
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      // crossAxisAlignment: CrossAxisAlignment.baseline,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Remaining amount",
-                              style: TextStyle(
-                                  color: Colors.grey.shade500, fontSize: 18),
-                            ),
-                            Text(
-                              "\$${loanModel.calculateRemainingLoanAmount(widget.borrower)}",
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              // money card total loan
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    // crossAxisAlignment: CrossAxisAlignment.baseline,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "Remaining amount",
+                            style: TextStyle(
+                                color: Colors.grey.shade500, fontSize: 18),
+                          ),
+                          Consumer<LoanModel>(
+                            builder: (context, value, child) => Text(
+                              "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 30,
                                   fontWeight: FontWeight.w600),
                             ),
-                          ],
-                        ),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.account_balance_outlined,
-                              size: 100,
-                              color: Colors.grey.shade300,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 20),
-                  child: Text(
-                    "Recent payments",
-                    style: TextStyle(color: Colors.grey.shade500),
-                  ),
-                ),
-              ],
-            ),
-            Consumer<LoanModel>(
-              builder: (context, value, child) => Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                      top: 0.0, right: 8, left: 8, bottom: 8),
-                  child: ListView.builder(
-                    itemCount: value.allPayments.length,
-                    itemBuilder: (context, index) {
-                      List<Payment>? payments =
-                          value.getPayments(widget.borrower);
-                      print(value.allPayments);
-                      // return Text("data");
-                      return ListTile(
-                        title: Text(
-                          "\$${payments![index].amount}",
-                          style: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                        // helper function to change date to human readable form
-                        trailing: Text(
-                          payments[index].date.toLocal().toString(),
-                          style: const TextStyle(
-                              fontWeight: FontWeight.w300, fontSize: 12),
-                        ),
-                      );
-                    },
+                          ),
+                        ],
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.account_balance_outlined,
+                            size: 100,
+                            color: Colors.grey.shade300,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 20),
+                child: Text(
+                  "Recent payments",
+                  style: TextStyle(color: Colors.grey.shade500),
+                ),
+              ),
+            ],
+          ),
+          Consumer<LoanModel>(
+            builder: (context, value, child) => Expanded(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 0.0, right: 8, left: 8, bottom: 8),
+                child: ListView.builder(
+                  itemCount: value.getPaymentCount(widget.borrower),
+                  itemBuilder: (context, index) {
+                    // print(value.getPayments(widget.borrower)![0].amount);
+                    return ListTile(
+                      title: Text(
+                        "\$${value.getPayments(widget.borrower)![index].amount}",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                      // helper function to change date to human readable form
+                      trailing: Text(
+                        value
+                            .getPayments(widget.borrower)![index]
+                            .date
+                            .toString(),
+                        style: const TextStyle(
+                            fontWeight: FontWeight.w300, fontSize: 12),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

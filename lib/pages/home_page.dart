@@ -15,21 +15,7 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _amountController = TextEditingController();
 
-  var loanModel = LoanModel();
-
-  void addBorrower() {
-    if (_nameController.text == '' || _amountController.text == '') {
-      return;
-    }
-    loanModel.addLoan(Loan(
-        name: _nameController.text,
-        amount: double.parse(_amountController.text),
-        date: DateTime.now(),
-        payments: [Payment(4, 0.0, DateTime.now())]));
-
-    _nameController.clear();
-    _amountController.clear();
-  }
+  // var loanModel = LoanModel();
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +64,23 @@ class _MyHomePageState extends State<MyHomePage> {
               TextButton(
                 onPressed: () {
                   Navigator.pop(context, 'Add');
-                  addBorrower();
+                  // addBorrower();
+                  if (_amountController.text == '' ||
+                      _nameController.text == '') {
+                    return;
+                  } else {
+                    Provider.of<LoanModel>(context, listen: false).addLoan(
+                      Loan(
+                        name: _nameController.text,
+                        amount: double.parse(_amountController.text),
+                        date: DateTime.now(),
+                        // payments: [Payment(1, 0, DateTime.now())]
+                      ),
+                    );
+                  }
+
+                  _nameController.clear();
+                  _amountController.clear();
                 },
                 child: const Text('Add'),
               ),
@@ -88,22 +90,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ),
       drawer: const Drawer(),
-      body: Consumer<LoanModel>(
-        builder: (context, value, child) => Column(
-          children: [
-            Column(
-              children: [
-                // money card total loan
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.grey.shade200,
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    child: Row(
+      body: Column(
+        children: [
+          Column(
+            children: [
+              // money card total loan
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  height: 200,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Consumer<LoanModel>(
+                    builder: (context, value, child) => Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       // crossAxisAlignment: CrossAxisAlignment.baseline,
                       children: [
@@ -117,7 +119,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   color: Colors.grey.shade500, fontSize: 18),
                             ),
                             Text(
-                              "\$${loanModel.calculatePendingLoansAmount(loanModel.allLoans)}",
+                              "\$${value.calculatePendingLoansAmount(value.allLoans)}",
                               style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 30,
@@ -139,42 +141,43 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                 ),
-              ],
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16.0, top: 20),
-                  child: Text(
-                    "Recent loans",
-                    style: TextStyle(color: Colors.grey.shade500),
-                  ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, top: 20),
+                child: Text(
+                  "Recent loans",
+                  style: TextStyle(color: Colors.grey.shade500),
                 ),
-              ],
-            ),
-            Expanded(
+              ),
+            ],
+          ),
+          Consumer<LoanModel>(
+            builder: (context, model, child) => Expanded(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: ListView.builder(
-                  itemCount: loanModel.allLoans.length,
+                  itemCount: model.allLoans.length,
                   itemBuilder: (context, index) {
                     return ListTile(
                       onTap: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (BuildContext context) {
-                            return SingleLoan(
-                                borrower: loanModel.allLoans[index]);
+                            return SingleLoan(borrower: model.allLoans[index]);
                           }),
                         );
                       },
                       leading: const CircleAvatar(child: Icon(Icons.person)),
-                      title: Text(loanModel.allLoans[index].name),
+                      title: Text(model.allLoans[index].name),
                       // helper function to change date to human readable form
-                      subtitle: Text(
-                          loanModel.allLoans[index].date.toLocal().toString()),
+                      subtitle:
+                          Text(model.allLoans[index].date.toLocal().toString()),
                       trailing: Text(
-                        "\$${loanModel.calculateRemainingLoanAmount(loanModel.allLoans[index])}",
+                        "\$${model.calculateRemainingLoanAmount(model.allLoans[index])}",
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 16),
                       ),
@@ -183,8 +186,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

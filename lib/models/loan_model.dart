@@ -22,45 +22,57 @@ class LoanModel extends ChangeNotifier {
       date: DateTime.now(),
     ),
   ];
-  List<Payment> _payments = [];
+  // List<Payment> _payments = [];
 
-  void addPayment(Loan loan, payment) {
-    loan.payments?.add(payment);
-    _payments = loan.payments!;
+  void addPayment(Loan loan, Payment payment) {
+    loan.payments.add(payment);
+    // _payments = loan.payments!;
 
     notifyListeners();
   }
 
   // getters
-  get allPayments => _payments;
+  // get allPayments => _payments;
   get allLoans => _loans;
 
   List<Payment>? getPayments(Loan loan) {
-    return loan.payments;
+    if (loan.payments != null) {
+      return loan.payments;
+    } else {
+      return [];
+    }
+  }
+
+  int? getPaymentCount(Loan loan) {
+    return loan.payments?.length != null ? loan.payments!.length : 0;
   }
 
   void addLoan(Loan borrower) {
     _loans.add(borrower);
+
     notifyListeners();
   }
 
   // calc totals for each user
 
-  double calculateTotalPayments(List<Payment>? payments) {
+  double? calculateTotalPayments(List<Payment>? payments) {
     double value = 0;
-    for (var payment in payments!) {
-      value = value + payment.amount;
+    if (payments == null) {
+      return 0.0;
+    } else {
+      for (var payment in payments) {
+        value = value + payment.amount;
+      }
+      return value;
     }
-    notifyListeners();
-    return value;
 
     // return payments!.fold(0, (total, payment) => total + payment.amount);
   }
 
-  double calculateRemainingLoanAmount(Loan loan) {
-    double totalPayments = calculateTotalPayments(loan.payments);
-    notifyListeners();
-    return loan.amount - totalPayments;
+  double? calculateRemainingLoanAmount(Loan loan) {
+    double? totalPayments = calculateTotalPayments(loan.payments);
+    // notifyListeners();
+    return loan.amount - totalPayments!;
   }
 
 // double calculateOverAllTotalPayments() {}
@@ -69,10 +81,11 @@ class LoanModel extends ChangeNotifier {
     double totalPaments = 0.0;
 
     for (var loan in loans) {
-      totalPaments = totalPaments + calculateTotalPayments(loan.payments);
+      var loanPayments = calculateTotalPayments(loan.payments);
+      totalPaments = totalPaments + loanPayments!;
     }
     double totalLoans = loans.fold(0, (total, loan) => total + loan.amount);
-    notifyListeners();
+    // notifyListeners();
     return totalLoans - totalPaments;
   }
 }
