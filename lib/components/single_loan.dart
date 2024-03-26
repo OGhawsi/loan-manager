@@ -56,9 +56,8 @@ class _SingleLoanState extends State<SingleLoan> {
                   Provider.of<LoanModel>(context, listen: false).addPayment(
                     widget.borrower,
                     Payment(
-                      5,
-                      double.parse(_paymentController.text),
-                      DateTime.now(),
+                      amount: double.parse(_paymentController.text),
+                      date: DateTime.now(),
                     ),
                   );
                   _paymentController.clear();
@@ -99,12 +98,23 @@ class _SingleLoanState extends State<SingleLoan> {
                                 color: Colors.grey.shade500, fontSize: 18),
                           ),
                           Consumer<LoanModel>(
-                            builder: (context, value, child) => Text(
-                              "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w600),
+                            builder: (context, value, child) => Column(
+                              children: [
+                                Text(
+                                  "\$${value.getInitialAmount(widget.borrower)}",
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                                Text(
+                                  "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 30,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -153,10 +163,8 @@ class _SingleLoanState extends State<SingleLoan> {
                       ),
                       // helper function to change date to human readable form
                       trailing: Text(
-                        value
-                            .getPayments(widget.borrower)![index]
-                            .date
-                            .toString(),
+                        value.getTimeAgo(
+                            value.getPayments(widget.borrower)![index].date),
                         style: const TextStyle(
                             fontWeight: FontWeight.w300, fontSize: 12),
                       ),

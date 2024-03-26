@@ -174,8 +174,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       leading: const CircleAvatar(child: Icon(Icons.person)),
                       title: Text(model.allLoans[index].name),
                       // helper function to change date to human readable form
-                      subtitle:
-                          Text(model.allLoans[index].date.toLocal().toString()),
+                      subtitle: Text(
+                        model.getTimeAgo(model.allLoans[index].date),
+                      ),
                       trailing: Text(
                         "\$${model.calculateRemainingLoanAmount(model.allLoans[index])}",
                         style: const TextStyle(

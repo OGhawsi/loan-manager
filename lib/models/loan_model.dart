@@ -7,16 +7,16 @@ class LoanModel extends ChangeNotifier {
       name: "Rahim",
       amount: 300,
       date: DateTime.now(),
-      payments: [Payment(1, 200.0, DateTime.now())],
+      payments: [Payment(amount: 200.0, date: DateTime.now())],
     ),
     Loan(
       name: "Ahmad",
       amount: 500,
       date: DateTime.now(),
-      payments: [Payment(2, 100.0, DateTime.now())],
+      payments: [Payment(amount: 4.0, date: DateTime.now())],
     ),
     Loan(
-      payments: [Payment(3, 50.0, DateTime.now())],
+      payments: [Payment(amount: 50.0, date: DateTime.now())],
       name: "Wali",
       amount: 260,
       date: DateTime.now(),
@@ -36,15 +36,11 @@ class LoanModel extends ChangeNotifier {
   get allLoans => _loans;
 
   List<Payment>? getPayments(Loan loan) {
-    if (loan.payments != null) {
-      return loan.payments;
-    } else {
-      return [];
-    }
+    return loan.payments;
   }
 
   int? getPaymentCount(Loan loan) {
-    return loan.payments?.length != null ? loan.payments!.length : 0;
+    return loan.payments.length;
   }
 
   void addLoan(Loan borrower) {
@@ -65,17 +61,13 @@ class LoanModel extends ChangeNotifier {
       }
       return value;
     }
-
     // return payments!.fold(0, (total, payment) => total + payment.amount);
   }
 
   double? calculateRemainingLoanAmount(Loan loan) {
     double? totalPayments = calculateTotalPayments(loan.payments);
-    // notifyListeners();
     return loan.amount - totalPayments!;
   }
-
-// double calculateOverAllTotalPayments() {}
 
   double calculatePendingLoansAmount(List<Loan> loans) {
     double totalPaments = 0.0;
@@ -85,7 +77,38 @@ class LoanModel extends ChangeNotifier {
       totalPaments = totalPaments + loanPayments!;
     }
     double totalLoans = loans.fold(0, (total, loan) => total + loan.amount);
-    // notifyListeners();
     return totalLoans - totalPaments;
+  }
+// Return initial lend amount and display on each borrower page
+
+  double getInitialAmount(Loan loan) {
+    return loan.amount;
+  }
+
+  // human readable date
+
+  String getTimeAgo(DateTime pastDate) {
+    final now = DateTime.now();
+    final difference = now.difference(pastDate);
+
+    if (difference.isNegative) {
+      return 'In the future';
+    }
+    if (difference.inDays >= 365) {
+      final years = difference.inDays ~/ 365;
+      return '$years year${years > 1 ? 's' : ''} ago';
+    } else if (difference.inDays >= 30) {
+      final months = difference.inDays ~/ 30;
+      return '$months month${months > 1 ? 's' : ''} ago';
+    } else if (difference.inDays >= 7) {
+      final weeks = difference.inDays ~/ 7;
+      return '$weeks week${weeks > 1 ? 's' : ''} ago';
+    } else if (difference.inDays > 0) {
+      return '${difference.inDays} day${difference.inDays > 1 ? 's' : ''} ago';
+    } else if (difference.inHours > 0) {
+      return '${difference.inHours} hour${difference.inHours > 1 ? 's' : ''} ago';
+    } else {
+      return '${difference.inMinutes} minute${difference.inMinutes > 1 ? 's' : ''} ago';
+    }
   }
 }
