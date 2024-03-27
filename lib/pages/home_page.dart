@@ -207,8 +207,6 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class CustomSearchDelegate extends SearchDelegate {
-  List<Loan> loans = LoanModel().allLoans;
-
   @override
   List<Widget>? buildActions(BuildContext context) {
     return [
@@ -234,6 +232,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildResults(BuildContext context) {
     List<Loan> result = [];
+    List<Loan> loans = Provider.of<LoanModel>(context).allLoans;
 
     if (query.isEmpty) {
       result = loans;
@@ -276,6 +275,7 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     List<Loan> result = [];
+    List<Loan> loans = Provider.of<LoanModel>(context).allLoans;
 
     if (query.isEmpty) {
       result = loans;

@@ -86,6 +86,12 @@ class LoanModel extends ChangeNotifier {
     return loan.amount;
   }
 
+  double getPaidAmount(Loan loan) {
+    var payments = loan.payments;
+
+    return payments.fold(0, (total, payment) => total + payment.amount);
+  }
+
   Stream<DateTime> timeStream() {
     return Stream.periodic(const Duration(minutes: 1), (_) => DateTime.now());
   }

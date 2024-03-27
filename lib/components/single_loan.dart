@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:loan_manager/models/loan_manager.dart';
 import 'package:loan_manager/models/loan_model.dart';
 import 'package:provider/provider.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 class SingleLoan extends StatefulWidget {
   const SingleLoan({
@@ -72,69 +73,180 @@ class _SingleLoanState extends State<SingleLoan> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Column(
-            children: [
-              // money card total loan
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  height: 200,
-                  decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    // crossAxisAlignment: CrossAxisAlignment.baseline,
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 8),
+              height: 180,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: Colors.white,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    top: 16.0, bottom: 16, right: 24, left: 26),
+                child: Consumer<LoanModel>(
+                  builder: (context, value, child) => Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      // titles and pending amount
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "Remaining amount",
+                            "P a i d / T o t a l",
                             style: TextStyle(
-                                color: Colors.grey.shade500, fontSize: 18),
-                          ),
-                          Consumer<LoanModel>(
-                            builder: (context, value, child) => Column(
-                              children: [
-                                Text(
-                                  "\$${value.getInitialAmount(widget.borrower)}",
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                                Text(
-                                  "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
-                                  style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 30,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ],
+                              color: Colors.grey.shade500,
                             ),
                           ),
+                          // consumer
+                          Row(
+                            children: [
+                              // we could use a stack here
+                              Text(
+                                "Pending",
+                                style: TextStyle(
+                                  color: Colors.grey.shade500,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 8,
+                              ),
+                              Text(
+                                "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
+                                style: TextStyle(
+                                  color: Colors.grey.shade900,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          )
                         ],
                       ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                      // initial total and paid amount- COnsumer
+                      Row(
                         children: [
-                          Icon(
-                            Icons.account_balance_outlined,
-                            size: 100,
-                            color: Colors.grey.shade300,
+                          Text(
+                            "\$${value.getPaidAmount(widget.borrower)}",
+                            style: TextStyle(
+                                color: Colors.grey.shade900,
+                                fontSize: 40,
+                                fontWeight: FontWeight.w700),
+                          ),
+                          Text(
+                            "/ \$${value.getInitialAmount(widget.borrower)}",
+                            style: TextStyle(
+                                color: Colors.grey.shade600,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w500),
                           ),
                         ],
                       ),
+                      const SizedBox(
+                        height: 8,
+                      ),
+                      // paid amount progress bar with Consumer
+                      Row(
+                        mainAxisSize: MainAxisSize.max,
+                        // mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          LinearPercentIndicator(
+                            width: 320,
+                            animation: true,
+                            lineHeight: 20.0,
+                            animationDuration: 1000,
+                            percent: value.getPaidAmount(widget.borrower) /
+                                value.getInitialAmount(widget.borrower),
+                            center: Text(
+                              "${(value.getPaidAmount(widget.borrower) / value.getInitialAmount(widget.borrower) * 100).toStringAsFixed(2)}%",
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            barRadius: const Radius.circular(16),
+                            progressColor: Colors.grey.shade800,
+                          ),
+                        ],
+                      ),
+
+                      // money card total loan
+                      // Padding(
+                      //   padding: const EdgeInsets.all(20),
+                      //   child: Container(
+                      //     padding: const EdgeInsets.symmetric(horizontal: 20),
+                      //     height: 200,
+                      //     decoration: BoxDecoration(
+                      //       color: Colors.grey.shade200,
+                      //       borderRadius: BorderRadius.circular(8),
+                      //     ),
+                      //     child: Row(
+                      //       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //       // crossAxisAlignment: CrossAxisAlignment.baseline,
+                      //       children: [
+                      //         Column(
+                      //           // mainAxisAlignment: MainAxisAlignment.center,
+                      //           // crossAxisAlignment: CrossAxisAlignment.start,
+                      //           children: [
+                      //             Row(
+                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      //               // crossAxisAlignment: CrossAxisAlignment.center,
+                      //               children: [
+                      //                 Text(
+                      //                   "Paid/Total",
+                      //                   style: TextStyle(
+                      //                       color: Colors.grey.shade500, fontSize: 18),
+                      //                 ),
+                      //                 Row(
+                      //                   children: [
+                      //                     Text(
+                      //                       "Pending",
+                      //                       style: TextStyle(
+                      //                           color: Colors.grey.shade500,
+                      //                           fontSize: 18),
+                      //                     ),
+                      //                     Text(
+                      //                       "1,245",
+                      //                       style: TextStyle(
+                      //                           color: Colors.grey.shade500,
+                      //                           fontSize: 18),
+                      //                     ),
+                      //                   ],
+                      //                 )
+                      //               ],
+                      //             ),
+                      //             Consumer<LoanModel>(
+                      //               builder: (context, value, child) => Row(
+                      //                 children: [
+                      //                   Text(
+                      //                     "\$${value.getInitialAmount(widget.borrower)}",
+                      //                     style: const TextStyle(
+                      //                         color: Colors.black,
+                      //                         fontSize: 30,
+                      //                         fontWeight: FontWeight.w600),
+                      //                   ),
+                      //                   Text(
+                      //                     "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
+                      //                     style: const TextStyle(
+                      //                         color: Colors.black,
+                      //                         fontSize: 30,
+                      //                         fontWeight: FontWeight.w600),
+                      //                   ),
+                      //                 ],
+                      //               ),
+                      //             ),
+                      //           ],
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ),
                 ),
               ),
-            ],
+            ),
           ),
+
+          // Payments tile
           Row(
             children: [
               Padding(
