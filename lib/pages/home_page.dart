@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:loan_manager/components/constants.dart';
+import 'package:loan_manager/components/search_delegate.dart';
 import 'package:loan_manager/components/single_loan.dart';
 import 'package:loan_manager/models/loan_manager.dart';
 import 'package:loan_manager/models/loan_model.dart';
@@ -22,6 +24,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.background,
       appBar: AppBar(
         title: const Text("Loan Manager"),
         centerTitle: true,
@@ -57,7 +60,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 TextField(
                   controller: _amountController,
-                  decoration: const InputDecoration(hintText: "Amount: \$35.6"),
+                  decoration:
+                      const InputDecoration(hintText: "Amount: AFN 35.6"),
                   keyboardType: TextInputType.number,
                 )
               ],
@@ -116,16 +120,27 @@ class _MyHomePageState extends State<MyHomePage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              "Loans",
+                              "P e n d i n g ",
                               style: TextStyle(
                                   color: Colors.grey.shade500, fontSize: 18),
                             ),
-                            Text(
-                              "\$${value.calculatePendingLoansAmount(value.allLoans)}",
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 40,
-                                  fontWeight: FontWeight.w700),
+                            Row(
+                              children: [
+                                Text(
+                                  currencyAfn,
+                                  style: TextStyle(
+                                      color: Colors.grey.shade700,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.w400),
+                                ),
+                                Text(
+                                  " ${value.calculatePendingLoansAmount(value.allLoans)}",
+                                  style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 40,
+                                      fontWeight: FontWeight.w700),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -192,7 +207,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
 
                       trailing: Text(
-                        "\$${model.calculateRemainingLoanAmount(model.allLoans[index])}",
+                        "$currencyAfn ${model.calculateRemainingLoanAmount(model.allLoans[index])}",
                         style: const TextStyle(
                             fontWeight: FontWeight.w600, fontSize: 16),
                       ),
@@ -203,116 +218,6 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class CustomSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [
-      IconButton(
-        onPressed: () {
-          query = '';
-        },
-        icon: const Icon(Icons.clear),
-      )
-    ];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        close(context, null);
-      },
-      icon: const Icon(Icons.arrow_back),
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    List<Loan> result = [];
-    List<Loan> loans = Provider.of<LoanModel>(context).allLoans;
-
-    if (query.isEmpty) {
-      result = loans;
-    } else {
-      for (var item in loans) {
-        if (item.name.toLowerCase().contains(query.toLowerCase())) {
-          result.add(item);
-        }
-      }
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: result.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return SingleLoan(borrower: result[index]);
-                }),
-              );
-            },
-            leading: const CircleAvatar(child: Icon(Icons.person)),
-            title: Text(result[index].name),
-            // helper function to change date to human readable form
-            subtitle: Text(result[index].date.toLocal().toString()),
-            trailing: Text(
-              "\$${result[index].amount}",
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-          );
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    List<Loan> result = [];
-    List<Loan> loans = Provider.of<LoanModel>(context).allLoans;
-
-    if (query.isEmpty) {
-      result = loans;
-    } else {
-      for (var item in loans) {
-        if (item.name.toLowerCase().contains(query.toLowerCase())) {
-          result.add(item);
-        }
-      }
-    }
-
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: result.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (BuildContext context) {
-                  return SingleLoan(borrower: result[index]);
-                }),
-              );
-            },
-            leading: const CircleAvatar(child: Icon(Icons.person)),
-            title: Text(result[index].name),
-            // helper function to change date to human readable form
-            subtitle: Text(result[index].date.toLocal().toString()),
-            trailing: Text(
-              "\$${result[index].amount}",
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
-            ),
-          );
-        },
       ),
     );
   }

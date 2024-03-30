@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loan_manager/components/constants.dart';
 import 'package:loan_manager/models/loan_manager.dart';
 import 'package:loan_manager/models/loan_model.dart';
 import 'package:provider/provider.dart';
@@ -41,7 +42,8 @@ class _SingleLoanState extends State<SingleLoan> {
               children: [
                 TextField(
                   controller: _paymentController,
-                  decoration: const InputDecoration(hintText: "Amount: \$35.6"),
+                  decoration:
+                      const InputDecoration(hintText: "Amount: AFN 35.6"),
                   keyboardType: TextInputType.number,
                 )
               ],
@@ -113,7 +115,7 @@ class _SingleLoanState extends State<SingleLoan> {
                                 width: 8,
                               ),
                               Text(
-                                "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
+                                "$currencyAfn ${value.calculateRemainingLoanAmount(widget.borrower)}",
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
@@ -127,15 +129,28 @@ class _SingleLoanState extends State<SingleLoan> {
                       // initial total and paid amount- COnsumer
                       Row(
                         children: [
+                          const Text(
+                            currencyAfn,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                            ),
+                          ),
                           Text(
-                            "\$${value.getPaidAmount(widget.borrower)}",
+                            " ${value.getPaidAmount(widget.borrower)} /",
                             style: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 40,
                                 fontWeight: FontWeight.w700),
                           ),
+                          const Text(
+                            currencyAfn,
+                            style: TextStyle(
+                              fontSize: 16,
+                            ),
+                          ),
                           Text(
-                            "/ \$${value.getInitialAmount(widget.borrower)}",
+                            " ${value.getInitialAmount(widget.borrower)}",
                             style: TextStyle(
                                 color: Colors.grey.shade600,
                                 fontSize: 24,
@@ -197,7 +212,7 @@ class _SingleLoanState extends State<SingleLoan> {
                     // print(value.getPayments(widget.borrower)![0].amount);
                     return ListTile(
                       title: Text(
-                        "\$${value.getPayments(widget.borrower)![index].amount}",
+                        "$currencyAfn ${value.getPayments(widget.borrower)![index].amount}",
                         style: const TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w600),
                       ),
@@ -219,6 +234,3 @@ class _SingleLoanState extends State<SingleLoan> {
     );
   }
 }
-
-// add textfield to set paid amount as transaction
-// implement autoincrement for ID.

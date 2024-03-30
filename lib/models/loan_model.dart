@@ -8,16 +8,16 @@ class LoanModel extends ChangeNotifier {
       name: "Rahim",
       amount: 300,
       date: DateTime.now(),
-      payments: [Payment(amount: 200.0, date: DateTime.now())],
+      payments: [Payment(amount: 200, date: DateTime.now())],
     ),
     Loan(
       name: "Ahmad",
       amount: 500,
       date: DateTime.now(),
-      payments: [Payment(amount: 4.0, date: DateTime.now())],
+      payments: [Payment(amount: 4, date: DateTime.now())],
     ),
     Loan(
-      payments: [Payment(amount: 50.0, date: DateTime.now())],
+      payments: [Payment(amount: 50, date: DateTime.now())],
       name: "Wali",
       amount: 260,
       date: DateTime.now(),
@@ -55,7 +55,7 @@ class LoanModel extends ChangeNotifier {
   double? calculateTotalPayments(List<Payment>? payments) {
     double value = 0;
     if (payments == null) {
-      return 0.0;
+      return 0;
     } else {
       for (var payment in payments) {
         value = value + payment.amount;
@@ -71,7 +71,7 @@ class LoanModel extends ChangeNotifier {
   }
 
   double calculatePendingLoansAmount(List<Loan> loans) {
-    double totalPaments = 0.0;
+    double totalPaments = 0;
 
     for (var loan in loans) {
       var loanPayments = calculateTotalPayments(loan.payments);
