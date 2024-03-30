@@ -35,7 +35,7 @@ class _SingleLoanState extends State<SingleLoan> {
         onPressed: () => showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('AlertDialog Title'),
+            title: const Text('Add recieved amount'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -114,8 +114,8 @@ class _SingleLoanState extends State<SingleLoan> {
                               ),
                               Text(
                                 "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
-                                style: TextStyle(
-                                  color: Colors.grey.shade900,
+                                style: const TextStyle(
+                                  color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
                                 ),
@@ -129,8 +129,8 @@ class _SingleLoanState extends State<SingleLoan> {
                         children: [
                           Text(
                             "\$${value.getPaidAmount(widget.borrower)}",
-                            style: TextStyle(
-                                color: Colors.grey.shade900,
+                            style: const TextStyle(
+                                color: Colors.black,
                                 fontSize: 40,
                                 fontWeight: FontWeight.w700),
                           ),
@@ -167,78 +167,6 @@ class _SingleLoanState extends State<SingleLoan> {
                           ),
                         ],
                       ),
-
-                      // money card total loan
-                      // Padding(
-                      //   padding: const EdgeInsets.all(20),
-                      //   child: Container(
-                      //     padding: const EdgeInsets.symmetric(horizontal: 20),
-                      //     height: 200,
-                      //     decoration: BoxDecoration(
-                      //       color: Colors.grey.shade200,
-                      //       borderRadius: BorderRadius.circular(8),
-                      //     ),
-                      //     child: Row(
-                      //       // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //       // crossAxisAlignment: CrossAxisAlignment.baseline,
-                      //       children: [
-                      //         Column(
-                      //           // mainAxisAlignment: MainAxisAlignment.center,
-                      //           // crossAxisAlignment: CrossAxisAlignment.start,
-                      //           children: [
-                      //             Row(
-                      //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      //               // crossAxisAlignment: CrossAxisAlignment.center,
-                      //               children: [
-                      //                 Text(
-                      //                   "Paid/Total",
-                      //                   style: TextStyle(
-                      //                       color: Colors.grey.shade500, fontSize: 18),
-                      //                 ),
-                      //                 Row(
-                      //                   children: [
-                      //                     Text(
-                      //                       "Pending",
-                      //                       style: TextStyle(
-                      //                           color: Colors.grey.shade500,
-                      //                           fontSize: 18),
-                      //                     ),
-                      //                     Text(
-                      //                       "1,245",
-                      //                       style: TextStyle(
-                      //                           color: Colors.grey.shade500,
-                      //                           fontSize: 18),
-                      //                     ),
-                      //                   ],
-                      //                 )
-                      //               ],
-                      //             ),
-                      //             Consumer<LoanModel>(
-                      //               builder: (context, value, child) => Row(
-                      //                 children: [
-                      //                   Text(
-                      //                     "\$${value.getInitialAmount(widget.borrower)}",
-                      //                     style: const TextStyle(
-                      //                         color: Colors.black,
-                      //                         fontSize: 30,
-                      //                         fontWeight: FontWeight.w600),
-                      //                   ),
-                      //                   Text(
-                      //                     "\$${value.calculateRemainingLoanAmount(widget.borrower)}",
-                      //                     style: const TextStyle(
-                      //                         color: Colors.black,
-                      //                         fontSize: 30,
-                      //                         fontWeight: FontWeight.w600),
-                      //                   ),
-                      //                 ],
-                      //               ),
-                      //             ),
-                      //           ],
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
                 ),

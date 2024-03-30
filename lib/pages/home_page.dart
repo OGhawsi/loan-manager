@@ -16,6 +16,8 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _amountController = TextEditingController();
 
   // var loanModel = LoanModel();
+  // TODO: currency selector
+  // card could show multiple currencies
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         onPressed: () => showDialog<String>(
           context: context,
           builder: (BuildContext context) => AlertDialog(
-            title: const Text('AlertDialog Title'),
+            title: const Text('Add new loan'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -122,8 +124,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               "\$${value.calculatePendingLoansAmount(value.allLoans)}",
                               style: const TextStyle(
                                   color: Colors.black,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.w600),
+                                  fontSize: 40,
+                                  fontWeight: FontWeight.w700),
                             ),
                           ],
                         ),
