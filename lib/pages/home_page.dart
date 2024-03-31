@@ -4,6 +4,7 @@ import 'package:loan_manager/components/search_delegate.dart';
 import 'package:loan_manager/components/single_loan.dart';
 import 'package:loan_manager/models/loan_manager.dart';
 import 'package:loan_manager/models/loan_model.dart';
+import 'package:loan_manager/models/theme_model.dart';
 import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
@@ -18,7 +19,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final TextEditingController _amountController = TextEditingController();
 
   // var loanModel = LoanModel();
-  // TODO: currency selector
   // card could show multiple currencies
 
   @override
@@ -95,7 +95,28 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         child: const Icon(Icons.add),
       ),
-      drawer: const Drawer(),
+      drawer: Drawer(
+        backgroundColor: Theme.of(context).colorScheme.background,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 80),
+          child: Column(
+            children: [
+              TextButton(
+                onPressed: () {
+                  Provider.of<ThemeProvider>(context, listen: false)
+                      .toggleTheme();
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Dark/Light",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Column(
         children: [
           Column(
@@ -107,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   height: 200,
                   decoration: BoxDecoration(
-                    color: Colors.grey.shade200,
+                    color: Theme.of(context).colorScheme.secondary,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Consumer<LoanModel>(
